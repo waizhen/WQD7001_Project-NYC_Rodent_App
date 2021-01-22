@@ -17,7 +17,6 @@ library(forcats)
 library(shinycssloaders)
 
 # Read all required data and shapefiles
-df <- readRDS("Rodent_Inspection_clean_R1.rds")
 nycnew <- st_read("nyu_2451_34509.shp")
 
 # Convert data types
@@ -101,7 +100,6 @@ dfActions <- df %>%
 
 ############### Server for this application ###############
 server <- function(input, output, session) {
-  
   ############### Tab 1 ###############
   
   # Create our filtered data for plotting map
@@ -127,9 +125,11 @@ server <- function(input, output, session) {
       )
   })
   
+  # Create another one for the toggle button
+  toggle <- reactiveValues()
+  
   # Leaflet map with 2 markers
   output$map <- renderLeaflet({
-    
     # Change the map initial view based on user input borough
     if (input$borough == "Manhattan") {
       long <- -73.96625
@@ -154,7 +154,6 @@ server <- function(input, output, session) {
     
     # Legend HTML generator:
     markerLegendHTML <- function(IconSet) {
-      
       # Container div:
       legendHtml <-
         "<div style='padding: 10px; padding-bottom: 10px;'><h4 style='padding-top:0; padding-bottom:10px; margin: 0;'> Inspection Result </h4>"
@@ -251,30 +250,52 @@ server <- function(input, output, session) {
     data_of_click$clickedMarker <- NULL
   })
   
+  # Reset with observe event
+  observeEvent(input$alt_table, {
+    if (input$alt_table) {
+      toggle$value <- TRUE
+    } else {
+      toggle$value <- FALSE
+    }
+    
+  })
+  
   # Output a table
   output$table <- DT::renderDataTable({
-    DT::datatable(
-      if (is.null(data_of_click$clickedMarker)) {
-        dt_df[dt_df$BOROUGH == input$borough &
-                dt_df$YEAR == input$year &
-                dt_df$MONTH == input$month, -c(3, 7:9)][order(dt_df[dt_df$BOROUGH == input$borough &
-                                                                      dt_df$YEAR == input$year &
-                                                                      dt_df$MONTH == input$month, -c(3, 7:9)][, 1], -dt_df[dt_df$BOROUGH == input$borough &
-                                                                                                                             dt_df$YEAR == input$year &
-                                                                                                                             dt_df$MONTH == input$month, -c(3, 7:9)][, 2]),]
-      } else {
-        dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id &
-                dt_df$BOROUGH == input$borough &
-                dt_df$YEAR == input$year &
-                dt_df$MONTH == input$month, -c(3, 7:9)][order(dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id &
-                                                                      dt_df$BOROUGH == input$borough &
-                                                                      dt_df$YEAR == input$year &
-                                                                      dt_df$MONTH == input$month, -c(3, 7:9)][, 1], -dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id &
-                                                                                                                             dt_df$BOROUGH == input$borough &
-                                                                                                                             dt_df$YEAR == input$year &
-                                                                                                                             dt_df$MONTH == input$month, -c(3, 7:9)][, 2]),]
+    table_obj <- DT::datatable(
+      if (toggle$value == FALSE) {
+        if (is.null(data_of_click$clickedMarker)) {
+          dt_df[dt_df$BOROUGH == input$borough &
+                  dt_df$YEAR == input$year &
+                  dt_df$MONTH == input$month, -c(3, 7:9)][order(dt_df[dt_df$BOROUGH == input$borough &
+                                                                        dt_df$YEAR == input$year &
+                                                                        dt_df$MONTH == input$month, -c(3, 7:9)][, 1], -dt_df[dt_df$BOROUGH == input$borough &
+                                                                                                                               dt_df$YEAR == input$year &
+                                                                                                                               dt_df$MONTH == input$month, -c(3, 7:9)][, 2]),]
+        } else {
+          dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id &
+                  dt_df$BOROUGH == input$borough &
+                  dt_df$YEAR == input$year &
+                  dt_df$MONTH == input$month, -c(3, 7:9)][order(dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id &
+                                                                        dt_df$BOROUGH == input$borough &
+                                                                        dt_df$YEAR == input$year &
+                                                                        dt_df$MONTH == input$month, -c(3, 7:9)][, 1], -dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id &
+                                                                                                                               dt_df$BOROUGH == input$borough &
+                                                                                                                               dt_df$YEAR == input$year &
+                                                                                                                               dt_df$MONTH == input$month, -c(3, 7:9)][, 2]),]
+        }
+      } else if (toggle$value == TRUE) {
+        validate(need(
+          !is.null(data_of_click$clickedMarker),
+          'Please select a street by clicking the marker'
+        ))
+        if (!is.null(data_of_click$clickedMarker)) {
+          dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id, -c(3, 7:9)][order(dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id, -c(3, 7:9)][, 1], -dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id, -c(3, 7:9)][, 2]),]
+        }
       },
       options = list(
+        scroller = TRUE,
+        scrollX = TRUE,
         lengthMenu = c(10, 25, 50, 100),
         pageLength = 15
       ),
@@ -331,7 +352,7 @@ server <- function(input, output, session) {
         stringsAsFactors = FALSE
       )
   })
-
+  
   # Create a dynamic output using observe to update the checkbox input
   observe({
     if (input$type == "Compliance") {
@@ -909,7 +930,6 @@ server <- function(input, output, session) {
   
   # Generate counts for value box in Inspection Type - General
   vbInsR <- function(x) {
-    
     # Validate - user need to check at least 1 checkbox
     validate(need(
       input$chkIni == TRUE |
@@ -1276,7 +1296,6 @@ server <- function(input, output, session) {
   
   # Generate value box for Inspection Type - Actions
   vbInsA <- function(x) {
-    
     # Different colors and messages shown for different type
     if (x == 'Bait applied') {
       msg = 'Bait (Applied)'

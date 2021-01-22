@@ -82,14 +82,14 @@ top_10_p <- df %>%
   group_by(BOROUGH, STREET_NAME, RESULT) %>%
   summarise(count = n()) %>%
   arrange(-count)
-top_10_p <- top_10_p[1:10, ]
+top_10_p <- top_10_p[1:10,]
 
 top_10_r <- df %>%
   filter(RESULT == "Rat Activity") %>%
   group_by(BOROUGH, STREET_NAME, RESULT) %>%
   summarise(count = n()) %>%
   arrange(-count)
-top_10_r <- top_10_r[1:10, ]
+top_10_r <- top_10_r[1:10,]
 
 # Separate the data for graphs use - Inspection Type (Tab 3)
 dfInCo <- df %>%
@@ -155,8 +155,8 @@ ui <- dashboardPage(
       tags$style(
         HTML(
           "
-        .tabbable > .nav > li > a   {background-color: #2F7BE7;  color:white; width : 400px; font-size: 18px;}
-        .tabbable > .nav > li[class=active]    > a {background-color: #E7962F; color:white; width: 400px; font-size: 18px;}
+        .tabbable > .nav > li > a   {background-color: #2F7BE7;  color:white; width : 300px; font-size: 16px;}
+        .tabbable > .nav > li[class=active]    > a {background-color: #E7962F; color:white; width: 300px; font-size: 16px;}
         .checkbox {
         line-height: 30px;
         }
@@ -179,7 +179,7 @@ ui <- dashboardPage(
         }
         .selectize-input { font-size: 20px; line-height: 22px;}
         .selectize-dropdown { font-size: 20px; line-height: 20px; }
-        .bootstrap-select .dropdown-toggle .filter-option-inner-inner { font-size: 20px; }
+        .bootstrap-select .dropdown-toggle .filter-option-inner-inner { font-size: 16px; }
         .leaflet-tooltip {color:black !important; background-color: white !important;}
         #reset{ margin-top: 28px; }
         #year{ font-size:20px; }
@@ -252,7 +252,7 @@ ui <- dashboardPage(
                        tags$head(tags$style("#date{
                          font-size: 22px;
                          }"))
-                     ),),
+                     ), ),
                      column(6, strong(
                        div(style = "font-size:28px;",
                            "Rat Inspector's Progress:")
@@ -300,6 +300,12 @@ ui <- dashboardPage(
                                       font-size: 23px;
                                       }")),
                          br(),
+                         switchInput(
+                           inputId = "alt_table",
+                           label = "Show all rows related to the street",
+                           value = FALSE,
+                           labelWidth = "150px"
+                         ),
                          br(),
                          br(),
                          DT::dataTableOutput("table")
@@ -521,8 +527,8 @@ ui <- dashboardPage(
                <p><b>STEP 4: </b>Click on the checkbox for the statuses that you would like to view only (i.e. Rat Activity, Failed for other R, Passed, Cleanup Done).</p>
                <p><b>STEP 5: </b>You will see all details related to the rodent inspector&#39;s progress in a tabular format based on the year or month selected.</p>
                <p><b>STEP 6: </b>Click on any of the markers in the map to view the details in the table based on street name.</p>
-               <p><b>STEP 7: </b>If there are multiple Job IDs, you may key-in your desired Job ID in the search box to filter accordingly and monitor the progress of inspectors (i.e. job progress, inspection type, results, and dates).</p>
-               <p><b>STEP 8: </b>If you did not click on the marker, skip <b><u>STEP 6</b></u> and proceed to <b><u>STEP 7.</b></u></p>
+               <p><b>STEP 7: </b>If there are multiple Job IDs, you may key-in your desired Job ID in the search box to filter accordingly and monitor the progress of inspectors (i.e. job progress, inspection type, results, and dates). Also, if you wish to see all rows of inspections for other months, do set the toggle button of <b>"Show all rows related to the street"</b> to <b>ON</b>.</p>
+               <p><b>STEP 8: </b>If you did not click on the marker, skip <b><u>STEP 6</b></u> and proceed to <b><u>STEP 7</b></u>.</p>
                <p><b>STEP 9: </b>Refer to the table below to further understand the terms used by the government or rodent inspectors in regards to inspection types and results.</p>
                <p><b> INSPECTION TYPE: </b></p>
                <table id="t1">
@@ -534,20 +540,20 @@ ui <- dashboardPage(
                <tr>
                 <td rowspan=2>Regular</td>
                 <td>Initial</td>
-                <td>Initial inspection due to complaints or indexing programme in neighbourhood.</td>
+                <td>Initial inspection due to complaints or indexing programme in neighbourhood</td>
                </tr>
                <tr>
                 <td>Compliance</td>
-                <td>Following up from initial inspection if a property failed in the initial inspection.</td>
+                <td>Following up from initial inspection if a property failed in the initial inspection</td>
                </tr>
                <tr>
                 <td rowspan=3>Action</td>
                 <td>Bait</td>
-                <td>Applying rodenticide bait or monitor bait applied via visits by government pest experts.</td>
+                <td>Applying rodenticide bait or monitor bait applied via visits by government pest experts</td>
                </tr>
                <tr>
                 <td>Cleanup</td>
-                <td>Cleaning up rubbish and clutter by the Health Department.</td>
+                <td>Cleaning up rubbish and clutter by the Health Department</td>
                </tr>
                <tr>
                 <td>Stoppage</td>
