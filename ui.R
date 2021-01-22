@@ -107,12 +107,12 @@ ui <- dashboardPage(
   dashboardHeader(title = tagList(
     tags$img(
       class = "logo-mini",
-      src = 'logoSmall.png',
+      src = "logoSmall.PNG",
       height = "50px"
     ),
     tags$img(
       class = "logo-lg",
-      src = 'logo.png',
+      src = "logo.PNG",
       height = "50px",
       width = "235px"
     )
@@ -125,7 +125,7 @@ ui <- dashboardPage(
       menuItem("User Guide", tabName = "userGuide", icon = icon("book")),
       menuItem(
         "Source Code",
-        href = "https://www.google.com",
+        href = "https://github.com/waizhen/WQD7001_Project-NYC_Rodent_App",
         newtab = FALSE,
         icon = icon("code")
       ),
@@ -180,9 +180,10 @@ ui <- dashboardPage(
         .selectize-input { font-size: 20px; line-height: 22px;}
         .selectize-dropdown { font-size: 20px; line-height: 20px; }
         .bootstrap-select .dropdown-toggle .filter-option-inner-inner { font-size: 20px; }
-        .form-control { font-size: 20px; }
         .leaflet-tooltip {color:black !important; background-color: white !important;}
-                        "
+        #reset{ margin-top: 28px; }
+        #year{ font-size:20px; }
+        "
         )
       ),
       tags$head(tags$style(
@@ -322,86 +323,73 @@ ui <- dashboardPage(
                      ),
                      column(
                        6,
-                       fluidRow(
-                         column(
-                           4,
-                           div(
-                             style = "font-size:15px;",
-                             prettyRadioButtons(
-                               "type",
-                               div(style = "font-size:22px;", "Inspection Type"),
-                               as.list(unique(as.character(df$INSPECTION_TYPE))),
-                               selected = "Initial",
-                               status = "primary",
-                               shape = "round",
-                               outline = TRUE,
-                               fill = FALSE,
-                               thick = TRUE,
-                               animation = "pulse",
-                               icon = NULL,
-                               plain = FALSE,
-                               bigger = TRUE,
-                               inline = FALSE,
-                               width = "350px",
-                             )
-                           ),
-                           br(),
-                           br(),
-                           div(
-                             style = "font-size:20px;",
-                             pickerInput(
-                               "result",
-                               div(style = "font-size:18px;", "Inspection Result"),
-                               as.list(unique(as.character(df$RESULT))),
-                               choicesOpt = list(
-                                 icon = c(
-                                   "glyphicon-exclamation-sign",
-                                   "glyphicon-remove-sign",
-                                   "glyphicon-ok-sign",
-                                   "glyphicon-user",
-                                   "hlyphicon-wrench",
-                                   "glyphicon-trash",
-                                   "glyphicon-compressed"
-                                 )
-                               ),
-                               options = list(style = "btn-primary")
-                             )
-                           ),
-                           br(),
-                           br(),
-                           br(),
-                           
-                         ),
-                         column(
-                           8,
-                           strong(div(style = "font-size:24px;",
-                                      "Note on Inspection Result:")),
-                           br(),
-                           div(style = "font-size:21px;",
-                               "Bait applied, Monitoring visit, Cleanup done"),
-                           div(style = "font-size:21px;",
-                               "and Stoppage done are actions taken by"),
-                           div(style = "font-size:21px;",
-                               "rodent specialists."),
-                           br(),
-                           br(),
-                           br(),
-                           br(),
-                           br(),
-                           
-                           actionBttn(
-                             "reset",
-                             label = "Reset Map",
-                             icon = icon("refresh", lib = "glyphicon"),
-                             style = "gradient",
-                             color = "primary",
-                             size = "md",
-                             block = FALSE,
-                             no_outline = TRUE
+                       fluidRow(column(
+                         5, div(
+                           style = "font-size:15px;",
+                           prettyRadioButtons(
+                             "type",
+                             div(style = "font-size:22px;", "Inspection Type"),
+                             as.list(unique(as.character(df$INSPECTION_TYPE))),
+                             selected = "Initial",
+                             status = "primary",
+                             shape = "round",
+                             outline = TRUE,
+                             fill = FALSE,
+                             thick = TRUE,
+                             animation = "pulse",
+                             icon = NULL,
+                             plain = FALSE,
+                             bigger = TRUE,
+                             inline = FALSE,
+                             width = "350px",
                            )
                          )
                        ),
-                       
+                       column(
+                         7,
+                         strong(div(style = "font-size:24px;",
+                                    "Note on Inspection Result:")),
+                         br(),
+                         div(
+                           style = "font-size:21px;",
+                           "Bait applied, Monitoring visit, Cleanup done and Stoppage done are actions taken by rodent specialists."
+                         ),
+                       )),
+                       br(),
+                       fluidRow(column(
+                         5,
+                         pickerInput(
+                           "result",
+                           div(style = "font-size:18px;", "Inspection Result"),
+                           as.list(unique(as.character(df$RESULT))),
+                           choicesOpt = list(
+                             icon = c(
+                               "glyphicon-exclamation-sign",
+                               "glyphicon-remove-sign",
+                               "glyphicon-ok-sign",
+                               "glyphicon-user",
+                               "hlyphicon-wrench",
+                               "glyphicon-trash",
+                               "glyphicon-compressed"
+                             )
+                           ),
+                           options = list(style = "btn-primary")
+                         )
+                       ),
+                       column(
+                         7,
+                         actionBttn(
+                           "reset",
+                           label = "Reset Map",
+                           icon = icon("refresh", lib = "glyphicon"),
+                           style = "gradient",
+                           color = "primary",
+                           size = "md",
+                           block = FALSE,
+                           no_outline = TRUE
+                         )
+                       )),
+                       br(),
                        h3("Horizontal Bar Charts of Top 10 Streets for Rat Activity & Passed"),
                        br(),
                        fluidRow(tabBox(
