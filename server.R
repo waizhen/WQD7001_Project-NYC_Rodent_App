@@ -17,6 +17,7 @@ library(forcats)
 library(shinycssloaders)
 
 # Read all required data and shapefiles
+df <- readRDS("Rodent_Inspection_clean_R1.rds")
 nycnew <- st_read("nyu_2451_34509.shp")
 
 # Convert data types
