@@ -17,6 +17,7 @@ library(forcats)
 library(shinycssloaders)
 
 # Read all required data and shapefiles
+df <- readRDS("Rodent_Inspection_clean_R1.rds")
 nycnew <- st_read("nyu_2451_34509.shp")
 
 # Convert data types
@@ -81,14 +82,14 @@ top_10_p <- df %>%
   group_by(BOROUGH, STREET_NAME, RESULT) %>%
   summarise(count = n()) %>%
   arrange(-count)
-top_10_p <- top_10_p[1:10, ]
+top_10_p <- top_10_p[1:10,]
 
 top_10_r <- df %>%
   filter(RESULT == "Rat Activity") %>%
   group_by(BOROUGH, STREET_NAME, RESULT) %>%
   summarise(count = n()) %>%
   arrange(-count)
-top_10_r <- top_10_r[1:10, ]
+top_10_r <- top_10_r[1:10,]
 
 # Separate the data for graphs use - Inspection Type (Tab 3)
 dfInCo <- df %>%
@@ -211,7 +212,7 @@ server <- function(input, output, session) {
     
     # Subset data for the result group layers
     for (r in unique(geo_df()$RESULT)) {
-      sub = geo_df()[geo_df()$RESULT == r,]
+      sub = geo_df()[geo_df()$RESULT == r, ]
       map = map %>%
         addAwesomeMarkers(
           data = sub,
@@ -267,22 +268,22 @@ server <- function(input, output, session) {
         if (is.null(data_of_click$clickedMarker)) {
           dt_df[dt_df$BOROUGH == input$borough &
                   dt_df$YEAR == input$year &
-                  dt_df$MONTH == input$month, -c(3, 7:9)][order(dt_df[dt_df$BOROUGH == input$borough &
-                                                                        dt_df$YEAR == input$year &
-                                                                        dt_df$MONTH == input$month, -c(3, 7:9)][, 1], -dt_df[dt_df$BOROUGH == input$borough &
-                                                                                                                               dt_df$YEAR == input$year &
-                                                                                                                               dt_df$MONTH == input$month, -c(3, 7:9)][, 2]),]
+                  dt_df$MONTH == input$month,-c(3, 7:9)][order(dt_df[dt_df$BOROUGH == input$borough &
+                                                                       dt_df$YEAR == input$year &
+                                                                       dt_df$MONTH == input$month,-c(3, 7:9)][, 1],-dt_df[dt_df$BOROUGH == input$borough &
+                                                                                                                            dt_df$YEAR == input$year &
+                                                                                                                            dt_df$MONTH == input$month,-c(3, 7:9)][, 2]), ]
         } else {
           dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id &
                   dt_df$BOROUGH == input$borough &
                   dt_df$YEAR == input$year &
-                  dt_df$MONTH == input$month, -c(3, 7:9)][order(dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id &
-                                                                        dt_df$BOROUGH == input$borough &
-                                                                        dt_df$YEAR == input$year &
-                                                                        dt_df$MONTH == input$month, -c(3, 7:9)][, 1], -dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id &
-                                                                                                                               dt_df$BOROUGH == input$borough &
-                                                                                                                               dt_df$YEAR == input$year &
-                                                                                                                               dt_df$MONTH == input$month, -c(3, 7:9)][, 2]),]
+                  dt_df$MONTH == input$month,-c(3, 7:9)][order(dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id &
+                                                                       dt_df$BOROUGH == input$borough &
+                                                                       dt_df$YEAR == input$year &
+                                                                       dt_df$MONTH == input$month,-c(3, 7:9)][, 1],-dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id &
+                                                                                                                            dt_df$BOROUGH == input$borough &
+                                                                                                                            dt_df$YEAR == input$year &
+                                                                                                                            dt_df$MONTH == input$month,-c(3, 7:9)][, 2]), ]
         }
       } else if (toggle$value == TRUE) {
         validate(need(
@@ -290,12 +291,10 @@ server <- function(input, output, session) {
           'Please select a street by clicking the marker'
         ))
         if (!is.null(data_of_click$clickedMarker)) {
-          dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id, -c(3, 7:9)][order(dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id, -c(3, 7:9)][, 1], -dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id, -c(3, 7:9)][, 2]),]
+          dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id,-c(3, 7:9)][order(dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id,-c(3, 7:9)][, 1],-dt_df[dt_df$STREET_NAME == data_of_click$clickedMarker$id,-c(3, 7:9)][, 2]), ]
         }
       },
       options = list(
-        scroller = TRUE,
-        scrollX = TRUE,
         lengthMenu = c(10, 25, 50, 100),
         pageLength = 15
       ),
@@ -362,14 +361,14 @@ server <- function(input, output, session) {
         choices = as.list(c(
           "Rat Activity", "Failed for Other R", "Passed"
         )),
-        choicesOpt = list(icon = icon_df()[icon_df()$result %in% unique(as.character(df[df$INSPECTION_TYPE == input$type,]$RESULT)),]$icon_match)
+        choicesOpt = list(icon = icon_df()[icon_df()$result %in% unique(as.character(df[df$INSPECTION_TYPE == input$type, ]$RESULT)), ]$icon_match)
       )
     } else {
       updatePickerInput(
         session,
         "result",
-        choices = as.list(unique(as.character(df[df$INSPECTION_TYPE == input$type,]$RESULT))),
-        choicesOpt = list(icon = icon_df()[icon_df()$result %in% unique(as.character(df[df$INSPECTION_TYPE == input$type,]$RESULT)),]$icon_match)
+        choices = as.list(unique(as.character(df[df$INSPECTION_TYPE == input$type, ]$RESULT))),
+        choicesOpt = list(icon = icon_df()[icon_df()$result %in% unique(as.character(df[df$INSPECTION_TYPE == input$type, ]$RESULT)), ]$icon_match)
       )
     }
   })
@@ -494,7 +493,7 @@ server <- function(input, output, session) {
       group_by(BOROUGH, STREET_NAME, RESULT) %>%
       summarise(count = n()) %>%
       arrange(-count)
-    top_10_rat <- top_10_rat[1:10,]
+    top_10_rat <- top_10_rat[1:10, ]
     
     barClickedFunction1 <-
       JS(
@@ -529,7 +528,7 @@ server <- function(input, output, session) {
       group_by(BOROUGH, STREET_NAME, RESULT) %>%
       summarise(count = n()) %>%
       arrange(-count)
-    top_10_pass <- top_10_pass[1:10,]
+    top_10_pass <- top_10_pass[1:10, ]
     
     barClickedFunction2 <-
       JS(
@@ -574,7 +573,7 @@ server <- function(input, output, session) {
         filter(
           RESULT == "Passed" &
             STREET_NAME == data_of_click_pass$clickedStreet[2] &
-            BOROUGH == top_10_p[top_10_p$STREET_NAME == data_of_click_pass$clickedStreet[2],]$BOROUGH
+            BOROUGH == top_10_p[top_10_p$STREET_NAME == data_of_click_pass$clickedStreet[2], ]$BOROUGH
         ) %>%
         select(BOROUGH, STREET_NAME, RESULT, LATITUDE, LONGITUDE) %>%
         group_by(BOROUGH, STREET_NAME, RESULT) %>%
@@ -591,7 +590,7 @@ server <- function(input, output, session) {
         filter(
           RESULT == "Rat Activity" &
             STREET_NAME == data_of_click_rat$clickedStreet[2] &
-            BOROUGH == top_10_r[top_10_r$STREET_NAME == data_of_click_rat$clickedStreet[2],]$BOROUGH
+            BOROUGH == top_10_r[top_10_r$STREET_NAME == data_of_click_rat$clickedStreet[2], ]$BOROUGH
         ) %>%
         select(BOROUGH, STREET_NAME, RESULT, LATITUDE, LONGITUDE) %>%
         group_by(BOROUGH, STREET_NAME, RESULT) %>%

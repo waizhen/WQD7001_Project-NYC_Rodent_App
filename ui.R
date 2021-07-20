@@ -82,14 +82,14 @@ top_10_p <- df %>%
   group_by(BOROUGH, STREET_NAME, RESULT) %>%
   summarise(count = n()) %>%
   arrange(-count)
-top_10_p <- top_10_p[1:10,]
+top_10_p <- top_10_p[1:10, ]
 
 top_10_r <- df %>%
   filter(RESULT == "Rat Activity") %>%
   group_by(BOROUGH, STREET_NAME, RESULT) %>%
   summarise(count = n()) %>%
   arrange(-count)
-top_10_r <- top_10_r[1:10,]
+top_10_r <- top_10_r[1:10, ]
 
 # Separate the data for graphs use - Inspection Type (Tab 3)
 dfInCo <- df %>%
@@ -252,7 +252,7 @@ ui <- dashboardPage(
                        tags$head(tags$style("#date{
                          font-size: 22px;
                          }"))
-                     ), ),
+                     ),),
                      column(6, strong(
                        div(style = "font-size:28px;",
                            "Rat Inspector's Progress:")
@@ -527,8 +527,8 @@ ui <- dashboardPage(
                <p><b>STEP 4: </b>Click on the checkbox for the statuses that you would like to view only (i.e. Rat Activity, Failed for other R, Passed, Cleanup Done).</p>
                <p><b>STEP 5: </b>You will see all details related to the rodent inspector&#39;s progress in a tabular format based on the year or month selected.</p>
                <p><b>STEP 6: </b>Click on any of the markers in the map to view the details in the table based on street name.</p>
-               <p><b>STEP 7: </b>If there are multiple Job IDs, you may key-in your desired Job ID in the search box to filter accordingly and monitor the progress of inspectors (i.e. job progress, inspection type, results, and dates). Also, if you wish to see all rows of inspections for other months, do set the toggle button of <b>"Show all rows related to the street"</b> to <b>ON</b>.</p>
-               <p><b>STEP 8: </b>If you did not click on the marker, skip <b><u>STEP 6</b></u> and proceed to <b><u>STEP 7</b></u>.</p>
+               <p><b>STEP 7: </b>If there are multiple Job IDs, you may key-in your desired Job ID in the search box to filter accordingly and monitor the progress of inspectors (i.e. job progress, inspection type, results, and dates). Also, if you wish to see all rows of inspections for other months, do set the toggle button of <b>"Show all rows related to the street"</b> to <b>ON.</b></p>
+               <p><b>STEP 8: </b>If you did not click on the marker, skip <b><u>STEP 6</b></u> and proceed to <b><u>STEP 7.</b></u></p>
                <p><b>STEP 9: </b>Refer to the table below to further understand the terms used by the government or rodent inspectors in regards to inspection types and results.</p>
                <p><b> INSPECTION TYPE: </b></p>
                <table id="t1">
@@ -549,7 +549,7 @@ ui <- dashboardPage(
                <tr>
                 <td rowspan=3>Action</td>
                 <td>Bait</td>
-                <td>Applying rodenticide bait or monitor bait applied via visits by government pest experts</td>
+                <td>Applying rodenticide bait or monitor bait applied via visits by government pest expert.</td>
                </tr>
                <tr>
                 <td>Cleanup</td>
